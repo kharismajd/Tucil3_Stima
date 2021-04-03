@@ -70,11 +70,14 @@ class Vertice:
 
 class Graph:
     # Private
-    __vertices = [] # Array of objek Vertice
-    __adj_matrix = [] # Array of float
+    __vertices = None # Array of objek Vertice
+    __adj_matrix = None # Array of float
 
     # Public
     def __init__(self, file_name):
+        self.__vertices = []
+        self.__adj_matrix = []
+        
         file = open(file_name, 'r')
 
         vertices_count = int(file.readline())
@@ -85,30 +88,29 @@ class Graph:
             vertice_y = ""
 
             for j in range(len(line)):
-                if line[j] == '(':
-                    break
-                else:
+                if line[j] != '(':
                     vertice_name += line[j]
+                else:
+                    break
 
             for j in range(j + 1, len(line)):
-                if line[j] == ',':
-                    break
-                else:
+                if line[j] != ',':
                     vertice_x += line[j]
+                else:
+                    break
 
             for j in range(j + 1, len(line)):
-                if line[j] == ')':
-                    break
-                else:
+                if line[j] != ')':
                     vertice_y += line[j]
+                else:
+                    break
 
             while (vertice_name[len(vertice_name) - 1] == ' '):
                 vertice_name = vertice_name[:-1]
             vertice_x = float(vertice_x)
             vertice_y = float(vertice_y)
-
-            vertice = Vertice(vertice_name, vertice_x, vertice_y, "", 0)
-            self.__vertices.append(vertice)
+            
+            self.__vertices.append(Vertice(vertice_name, vertice_x, vertice_y, "", 0))
 
         for i in range(vertices_count):
             line = file.readline()
