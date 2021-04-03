@@ -78,6 +78,7 @@ class Vertice:
 
     def resetVertice(self):
         self.__parent = ""
+        self.__fn = 0
         self.__gn = 0
 
 class Graph:
