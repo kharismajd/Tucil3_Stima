@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <div class="mainHeader">
+            {%for i in graph.getVertices()%}
+                <li>{{i}}</li>
+                <li>{{i.getName()}}</li>
+                <li>{{i.getCoordinate().getLat()}}</li>
+                <li>{{i.getCoordinate().getLong()}}</li>
+                <li>{{i.getParent()}}</li>
+                <li>{{i.getFn()}}</li>
+            {%endfor%}
+        </div>
+</html>
