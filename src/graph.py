@@ -171,8 +171,8 @@ class Graph:
     def aStarPath(self, from_vertice, to_vertice):
         path = []
         return path
-
-graph = Graph("../test/test.txt")
+'''
+graph = Graph("../test/Sekitar_ITB.txt")
 vertices = graph.getVertices()
 for i in range(len(vertices)):
     print(vertices[i])
@@ -185,3 +185,4 @@ print(graph.getAdjMatrix())
 
 print(graph.euclideanDistance(0, 0, 3, 4))
 print(graph.haversine(-6.890968379818, 107.61064263724266, -6.878229213627043, 107.60935517694757)) # Jarak asrama ke itb
+'''
