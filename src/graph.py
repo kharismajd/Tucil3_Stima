@@ -1,9 +1,7 @@
 # Note:
 # __init__ di objek itu konstruktor
-# '__' di depan variabel itu artinya private (khusus python)
 # 'self' itu mirip dengan 'this'
 # Kalau mau copy object, pakai deepcopy
-# Coba cek 'a star algorithm' di geekforgeeks
 
 from math import radians, cos, sin, asin, sqrt
 import copy
@@ -34,17 +32,17 @@ class Vertice:
     # Private
     __name = None # String
     __coordinate = None # Objek Coordinate
-    __parent = None # String
-    __fn = None # Float
-    __gn = None # Float
+    # __parent = None # Int
+    # __fn = None # Float
+    # __gn = None # Float
 
     # Public
-    def __init__(self, name, lat, long, parent, fn, gn):
+    def __init__(self, name, lat, long):
         self.__name = name
         self.__coordinate = Coordinate(lat, long)
-        self.__parent = parent
-        self.__fn = fn
-        self.__gn = gn
+        # self.__parent = parent
+        # self.__fn = fn
+        # self.__gn = gn
 
     def getName(self):
         return self.__name
@@ -52,14 +50,14 @@ class Vertice:
     def getCoordinate(self):
         return self.__coordinate
 
-    def getParent(self):
-        return self.__parent
+    # def getParent(self):
+    #     return self.__parent
 
-    def getFn(self):
-        return self.__fn
+    # def getFn(self):
+    #     return self.__fn
 
-    def getGn(self):
-        return self.__gn
+    # def getGn(self):
+    #     return self.__gn
 
     def setName(self, name):
         self.__name = name
@@ -67,18 +65,18 @@ class Vertice:
     def setCoordinate(self, lat, long):
         self.__coordinate = Coordinate(lat, long)
 
-    def setParent(self, parent):
-        self.__parent = parent
+    # def setParent(self, parent):
+    #     self.__parent = parent
 
-    def setFn(self, fn):
-        self.__fn = fn
+    # def setFn(self, fn):
+    #     self.__fn = fn
 
-    def setGn(self, gn):
-        self.__gn = gn
+    # def setGn(self, gn):
+    #     self.__gn = gn
 
-    def resetVertice(self):
-        self.__parent = ""
-        self.__gn = 0
+    # def resetVertice(self):
+    #     self.__parent = -1
+    #     self.__gn = 0
 
 class Graph:
     # Private
@@ -122,7 +120,7 @@ class Graph:
             vertice_lat = float(vertice_lat)
             vertice_long = float(vertice_long)
             
-            self.__vertices.append(Vertice(vertice_name, vertice_lat, vertice_long, "", 0, 0))
+            self.__vertices.append(Vertice(vertice_name, vertice_lat, vertice_long))
 
         for i in range(vertices_count):
             line = file.readline()
@@ -169,7 +167,57 @@ class Graph:
         return c * r
 
     def aStarPath(self, from_vertice, to_vertice):
-        path = ["Dalem Kaum", "Alun-Alun Timur", "Balonggede A", "Balonggede B", "Balonggede C", "Balonggede D", "Dewi Sartika A"]
+        vertice_count = len(self.__vertices)
+        closedList = [False for i in range(vertice_count)]
+        openList = []
+        verticeParam = [[-1, 0.0, 0.0, 0.0] for i in range(vertice_count)]
+
+        openList.append([0.0, from_vertice])
+        minIdx = 0
+        while openList:
+            current = openList.pop(minIdx)
+            closedList[current[1]] = True
+
+            for branch in range(vertice_count):
+                if (self.adj_matrix[branch][current[1]] != 0) and (not closedList[branch]):
+                    gNew = verticeParam[current[1]][2] + self.adj_matrix[branch][current[1]]
+
+                    latBranch = self.getVerticeByIndex(branch).getLat()
+                    longBranch = self.getVerticeByIndex(branch).getLong()
+                    latToVer = self.getVerticeByIndex(to_vertice).getLat()
+                    longToVer = self.getVerticeByIndex(to_vertice).getLong()
+                    hNew = haversine(latBranch, longBranch, latToVer, longToVer)
+
+                    fNew = gNew + hNew
+                    if (verticeParam[branch][1] == -1 or verticeParam[branch][1] > fNew):
+                        openList.append(fNew, branch)
+                        verticeParam[branch][0] = current[1]
+                        verticeParam[branch][1] = fNew
+                        verticeParam[branch][2] = gNew
+                        verticeParam[branch][3] = hNew
+
+            min = openList[0][0]
+            for i in len(openList):
+                if openList[i][0] < min:
+                    minIdx = i
+
+            branch = openList[minIdx][1]
+            if branch == to_vertice:
+                verticeParam[branch][0] = current[1]
+                return self.getPath(verticeParam, to_vertice)
+        return None
+
+        # path = ["Dalem Kaum", "Alun-Alun Timur", "Balonggede A", "Balonggede B", "Balonggede C", "Balonggede D", "Dewi Sartika A"]
+        # return path
+
+    def getPath(self, verticeParam, to_vertice):
+        path = [self.getVerticeByIndex(to_vertice).getName()]
+        pred = verticeParam[to_vertice][0]
+        print("pred = ", pred)
+        while (pred != -1):
+            path.append(self.getVerticeByIndex(pred).getName())
+            pred = verticeParam[pred][0]
+            print("pred = ", pred)
         return path
 
     def getPathMatrix(self, path):
@@ -194,18 +242,24 @@ class Graph:
         for i in range(len(self.__vertices)):
             print(str(i + 1) + ". " + self.__vertices[i].getName())
             
-'''
-graph = Graph("../test/Sekitar_ITB.txt")
-vertices = graph.getVertices()
-for i in range(len(vertices)):
-    print(vertices[i])
-    print(vertices[i].getName())
-    print(vertices[i].getCoordinate().getLat())
-    print(vertices[i].getCoordinate().getLong())
-    print(vertices[i].getParent())
-    print(vertices[i].getFn())
-print(graph.getAdjMatrix())
 
-print(graph.euclideanDistance(0, 0, 3, 4))
-print(graph.haversine(-6.890968379818, 107.61064263724266, -6.878229213627043, 107.60935517694757)) # Jarak asrama ke itb
-'''
+# graph = Graph("../test/Sekitar_ITB.txt")
+# vertices = graph.getVertices()
+# param = [[-1], [0], [1]]
+# path = graph.getPath(param, 2)
+# print("Jalur yang ditemukan: " + path[0], end = "")
+# for i in range(1, len(path)):
+#     print(" --> " + path[i], end = "")
+# print("")
+
+# for i in range(len(vertices)):
+#     print(vertices[i])
+#     print(vertices[i].getName())
+#     print(vertices[i].getCoordinate().getLat())
+#     print(vertices[i].getCoordinate().getLong())
+#     print(vertices[i].getParent())
+#     print(vertices[i].getFn())
+# print(graph.getAdjMatrix())
+
+# print(graph.euclideanDistance(0, 0, 3, 4))
+# print(graph.haversine(-6.890968379818, 107.61064263724266, -6.878229213627043, 107.60935517694757)) # Jarak asrama ke itb
