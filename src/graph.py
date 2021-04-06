@@ -169,8 +169,31 @@ class Graph:
         return c * r
 
     def aStarPath(self, from_vertice, to_vertice):
-        path = []
+        path = ["Tamansari C", "Tamansari D", "Taman Kota B", "Taman Kota A", "Badak Singa"]
         return path
+
+    def getPathMatrix(self, path):
+        vertice_count = len(self.__vertices)
+        path_matrix = [[0 for i in range(vertice_count)] for j in range(vertice_count)]
+        for i in range(len(path) - 1):
+            from_idx = self.getVerticeIndex(path[i])
+            dest_idx = self.getVerticeIndex(path[i + 1])
+            path_matrix[from_idx][dest_idx] = 1
+            path_matrix[dest_idx][from_idx] = 1
+        return path_matrix
+
+    def getPathDistance(self, path):
+        distance = 0
+        for i in range(len(path) - 1):
+            from_idx = self.getVerticeIndex(path[i])
+            dest_idx = self.getVerticeIndex(path[i + 1])
+            distance += self.__adj_matrix[from_idx][dest_idx]
+        return distance
+
+    def showVerticesName(self):
+        for i in range(len(self.__vertices)):
+            print(str(i + 1) + ". " + self.__vertices[i].getName())
+            
 '''
 graph = Graph("../test/Sekitar_ITB.txt")
 vertices = graph.getVertices()
