@@ -11,4 +11,4 @@ def haversine(from_vertice_lat, from_vertice_long, to_vertice_lat, to_vertice_lo
         r = 6371 * 1000
         return c * r
 
-print(haversine(-6.92236836378364, 107.60645087404654, -6.922573388306235, 107.60764177478431))
+print(haversine(-6.93876084357985, 107.65606486632208, -6.938840720491008, 107.65567594602942))
