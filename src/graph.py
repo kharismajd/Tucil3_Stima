@@ -169,7 +169,7 @@ class Graph:
         return c * r
 
     def aStarPath(self, from_vertice, to_vertice):
-        path = ["Tamansari C", "Tamansari D", "Taman Kota B", "Taman Kota A", "Badak Singa"]
+        path = ["Dalem Kaum", "Alun-Alun Timur", "Balonggede A", "Balonggede B", "Balonggede C", "Balonggede D", "Dewi Sartika A"]
         return path
 
     def getPathMatrix(self, path):
