@@ -1,8 +1,3 @@
-# Note:
-# __init__ di objek itu konstruktor
-# 'self' itu mirip dengan 'this'
-# Kalau mau copy object, pakai deepcopy
-
 from math import radians, cos, sin, asin, sqrt
 import copy
 
@@ -168,11 +163,14 @@ class Graph:
 
     def aStarPath(self, from_vertice, to_vertice):
         vertice_count = len(self.__vertices)
+        # closedList menyimpan apakah vertice telah dikunjungi atau belum
         closedList = [False for i in range(vertice_count)]
-        openList = []
+        # openList adalah list kemungkinan vertice yang dikunjungi selanjutnya
+        openList = [[0.0, from_vertice]]
+        # verticeParam menyimpan parameter untuk setiap vertice
+        # setiap indeks masing-masing menyimpan parent, parameter f, parameter g, dan parameter h
         verticeParam = [[-1, -1.0, 0.0, 0.0] for i in range(vertice_count)]
 
-        openList.append([0.0, from_vertice])
         minIdx = 0
         while openList:
             current = openList.pop(minIdx)
@@ -181,7 +179,9 @@ class Graph:
             longToVer = self.getVerticeByIndex(to_vertice).getCoordinate().getLong()
 
             for branch in range(vertice_count):
+                # cek apakah ada hubungan antara branch dengan vertice yang sedang dikunjungi
                 if self.__adj_matrix[branch][current[1]] != 0:
+                    # cek apakah branch telah dikunjungi atau belum
                     if not closedList[branch]:
                         gNew = verticeParam[current[1]][2] + self.__adj_matrix[branch][current[1]]
 
@@ -190,6 +190,8 @@ class Graph:
                         hNew = self.haversine(latBranch, longBranch, latToVer, longToVer)
 
                         fNew = gNew + hNew
+                        # Jika vertice belum memiliki parent atau jarak ke parent sebelumnya lebih jauh,
+                        # set parent dan parameternya
                         if (verticeParam[branch][1] == -1 or verticeParam[branch][1] > fNew):
                             openList.append([fNew, branch])
                             verticeParam[branch][0] = current[1]
@@ -197,12 +199,16 @@ class Graph:
                             verticeParam[branch][2] = gNew
                             verticeParam[branch][3] = hNew
 
+            # Ambil vertice dari openList dengan nilai f paling kecil
             minIdx = openList.index(min(openList))
 
             branch = openList[minIdx][1]
+            # Jika vertice akhir ditemukan, return path ke vertice tersebut
             if branch == to_vertice:
                 verticeParam[branch][0] = current[1]
                 return self.getPath(verticeParam, to_vertice)
+        
+        # Jika tidak ada path dari vertice awal ke vertice akhir, return None
         return None
 
     def getPath(self, verticeParam, to_vertice):
@@ -235,25 +241,3 @@ class Graph:
     def showVerticesName(self):
         for i in range(len(self.__vertices)):
             print(str(i + 1) + ". " + self.__vertices[i].getName())
-            
-
-# graph = Graph("../test/Sekitar_ITB.txt")
-# vertices = graph.getVertices()
-# param = [[-1], [0], [1]]
-# path = graph.getPath(param, 2)
-# print("Jalur yang ditemukan: " + path[0], end = "")
-# for i in range(1, len(path)):
-#     print(" --> " + path[i], end = "")
-# print("")
-
-# for i in range(len(vertices)):
-#     print(vertices[i])
-#     print(vertices[i].getName())
-#     print(vertices[i].getCoordinate().getLat())
-#     print(vertices[i].getCoordinate().getLong())
-#     print(vertices[i].getParent())
-#     print(vertices[i].getFn())
-# print(graph.getAdjMatrix())
-
-# print(graph.euclideanDistance(0, 0, 3, 4))
-# print(graph.haversine(-6.890968379818, 107.61064263724266, -6.878229213627043, 107.60935517694757)) # Jarak asrama ke itb
