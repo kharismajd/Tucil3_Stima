@@ -27,17 +27,11 @@ class Vertice:
     # Private
     __name = None # String
     __coordinate = None # Objek Coordinate
-    # __parent = None # Int
-    # __fn = None # Float
-    # __gn = None # Float
 
     # Public
     def __init__(self, name, lat, long):
         self.__name = name
         self.__coordinate = Coordinate(lat, long)
-        # self.__parent = parent
-        # self.__fn = fn
-        # self.__gn = gn
 
     def getName(self):
         return self.__name
@@ -45,33 +39,11 @@ class Vertice:
     def getCoordinate(self):
         return self.__coordinate
 
-    # def getParent(self):
-    #     return self.__parent
-
-    # def getFn(self):
-    #     return self.__fn
-
-    # def getGn(self):
-    #     return self.__gn
-
     def setName(self, name):
         self.__name = name
 
     def setCoordinate(self, lat, long):
         self.__coordinate = Coordinate(lat, long)
-
-    # def setParent(self, parent):
-    #     self.__parent = parent
-
-    # def setFn(self, fn):
-    #     self.__fn = fn
-
-    # def setGn(self, gn):
-    #     self.__gn = gn
-
-    # def resetVertice(self):
-    #     self.__parent = -1
-    #     self.__gn = 0
 
 class Graph:
     # Private
@@ -145,13 +117,6 @@ class Graph:
                 return i
         return None
 
-    # Yang ini buat testing aja
-    # Buat ngitung heuristiknya
-    def euclideanDistance(self, from_vertice_lat, from_vertice_long, to_vertice_lat, to_vertice_long):
-        return ((from_vertice_lat - to_vertice_lat) ** 2 + (from_vertice_long - to_vertice_long) ** 2) ** 0.5
-
-    # Ini buat ngitung jarak antar dua titik di bumi (dalam meter)
-    # Buat ngitung heuristiknya
     def haversine(self, from_vertice_lat, from_vertice_long, to_vertice_lat, to_vertice_long):
         from_vertice_lat, from_vertice_long, to_vertice_lat, to_vertice_long = map(radians, [from_vertice_lat, from_vertice_long, to_vertice_lat, to_vertice_long])
         dlon = to_vertice_long - from_vertice_long
@@ -198,15 +163,17 @@ class Graph:
                             verticeParam[branch][1] = fNew
                             verticeParam[branch][2] = gNew
                             verticeParam[branch][3] = hNew
+                            
+            # Algoritma hanya akan lanjut jika terdapat vertice yang dapat dikunjungi
+            if openList:
+                # Ambil vertice dari openList dengan nilai f paling kecil
+                minIdx = openList.index(min(openList))
 
-            # Ambil vertice dari openList dengan nilai f paling kecil
-            minIdx = openList.index(min(openList))
-
-            branch = openList[minIdx][1]
-            # Jika vertice akhir ditemukan, return path ke vertice tersebut
-            if branch == to_vertice:
-                verticeParam[branch][0] = current[1]
-                return self.getPath(verticeParam, to_vertice)
+                branch = openList[minIdx][1]
+                # Jika vertice akhir ditemukan, return path ke vertice tersebut
+                if branch == to_vertice:
+                    verticeParam[branch][0] = current[1]
+                    return self.getPath(verticeParam, to_vertice)
         
         # Jika tidak ada path dari vertice awal ke vertice akhir, return None
         return None
