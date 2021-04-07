@@ -16,6 +16,7 @@ Program dapat dijalankan pada sistem operasi Windows. Pastikan sudah menginstall
 
 ## Cara Menjalankan
 - Install jupyter notebook versi terbaru dengan menjalankan command `pip install jupyter notebook` pada cmd
+- Install jupyter client versi terbaru dengan menjalankan command `pip install jupyter-client` pada cmd
 - Install ipyleaflet dengan menjalankan command `pip install ipyleaflet` pada cmd
 - Install ipywidgets dengan menjalankan command `pip install ipywidgets` pada cmd
 - Buka cmd di folder src
