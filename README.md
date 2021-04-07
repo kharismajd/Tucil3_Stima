@@ -1,6 +1,6 @@
 ## Author
-- 13519084 - Piedro
-- 13519176 - Kharisma
+- 13519084 - Rhapsodya Piedro Asmorobangun
+- 13519176 - Made Kharisma Jagaddhita
 
 ## Algoritma A*
 Algoritma A* juga merupakan algoritma traversal graf terinformasi sehingga algoritma ini memakai graf dengan bobot (weighted graph). Pencarian dimulai dari node awal tertentu dari grafik. Tujuan pencarian adalah untuk menemukan jalur ke node tujuan tertentu yang memiliki cost terkecil (jarak tempuh terkecil, waktu terpendek, dll.). Berikut merupakan langkah-langkah dari algoritma A*:
@@ -14,7 +14,7 @@ Algoritma A* juga merupakan algoritma traversal graf terinformasi sehingga algor
 ## Setup
 Program dapat dijalankan pada sistem operasi Windows. Pastikan sudah menginstall python dan pip
 
-## Cara jalanin
+## Cara Menjalankan
 - Install jupyter notebook versi terbaru dengan menjalankan command `pip install jupyter notebook` pada cmd
 - Install ipyleaflet dengan menjalankan command `pip install ipyleaflet` pada cmd
 - Install ipywidgets dengan menjalankan command `pip install ipywidgets` pada cmd
