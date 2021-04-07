@@ -170,36 +170,34 @@ class Graph:
         vertice_count = len(self.__vertices)
         closedList = [False for i in range(vertice_count)]
         openList = []
-        verticeParam = [[-1, 0.0, 0.0, 0.0] for i in range(vertice_count)]
+        verticeParam = [[-1, -1.0, 0.0, 0.0] for i in range(vertice_count)]
 
         openList.append([0.0, from_vertice])
         minIdx = 0
         while openList:
             current = openList.pop(minIdx)
             closedList[current[1]] = True
+            latToVer = self.getVerticeByIndex(to_vertice).getCoordinate().getLat()
+            longToVer = self.getVerticeByIndex(to_vertice).getCoordinate().getLong()
 
             for branch in range(vertice_count):
-                if (self.adj_matrix[branch][current[1]] != 0) and (not closedList[branch]):
-                    gNew = verticeParam[current[1]][2] + self.adj_matrix[branch][current[1]]
+                if self.__adj_matrix[branch][current[1]] != 0:
+                    if not closedList[branch]:
+                        gNew = verticeParam[current[1]][2] + self.__adj_matrix[branch][current[1]]
 
-                    latBranch = self.getVerticeByIndex(branch).getLat()
-                    longBranch = self.getVerticeByIndex(branch).getLong()
-                    latToVer = self.getVerticeByIndex(to_vertice).getLat()
-                    longToVer = self.getVerticeByIndex(to_vertice).getLong()
-                    hNew = haversine(latBranch, longBranch, latToVer, longToVer)
+                        latBranch = self.getVerticeByIndex(branch).getCoordinate().getLat()
+                        longBranch = self.getVerticeByIndex(branch).getCoordinate().getLong()
+                        hNew = self.haversine(latBranch, longBranch, latToVer, longToVer)
 
-                    fNew = gNew + hNew
-                    if (verticeParam[branch][1] == -1 or verticeParam[branch][1] > fNew):
-                        openList.append(fNew, branch)
-                        verticeParam[branch][0] = current[1]
-                        verticeParam[branch][1] = fNew
-                        verticeParam[branch][2] = gNew
-                        verticeParam[branch][3] = hNew
+                        fNew = gNew + hNew
+                        if (verticeParam[branch][1] == -1 or verticeParam[branch][1] > fNew):
+                            openList.append([fNew, branch])
+                            verticeParam[branch][0] = current[1]
+                            verticeParam[branch][1] = fNew
+                            verticeParam[branch][2] = gNew
+                            verticeParam[branch][3] = hNew
 
-            min = openList[0][0]
-            for i in len(openList):
-                if openList[i][0] < min:
-                    minIdx = i
+            minIdx = openList.index(min(openList))
 
             branch = openList[minIdx][1]
             if branch == to_vertice:
@@ -207,17 +205,13 @@ class Graph:
                 return self.getPath(verticeParam, to_vertice)
         return None
 
-        # path = ["Dalem Kaum", "Alun-Alun Timur", "Balonggede A", "Balonggede B", "Balonggede C", "Balonggede D", "Dewi Sartika A"]
-        # return path
-
     def getPath(self, verticeParam, to_vertice):
         path = [self.getVerticeByIndex(to_vertice).getName()]
         pred = verticeParam[to_vertice][0]
-        print("pred = ", pred)
         while (pred != -1):
             path.append(self.getVerticeByIndex(pred).getName())
             pred = verticeParam[pred][0]
-            print("pred = ", pred)
+        path.reverse()
         return path
 
     def getPathMatrix(self, path):
